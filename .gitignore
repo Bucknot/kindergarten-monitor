@@ -1,0 +1,53 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Testing & Type Checking caches
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Sensitive environment configuration & secrets
+.env
+*.env
+!.env.example
+
+# Local persistent data, uploads, audio processing and databases
+storage/uploads/*
+!storage/uploads/.gitkeep
+storage/processed/*
+!storage/processed/.gitkeep
+storage/snippets/*
+!storage/snippets/.gitkeep
+storage/cache/*
+!storage/cache/.gitkeep
+storage/db/*
+!storage/db/.gitkeep
+
+# Direct media and database files
+*.sqlite
+*.sqlite3
+*.db
+*.mp3
+*.wav
+*.m4a
+*.aac
+*.ogg
+*.flac
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/

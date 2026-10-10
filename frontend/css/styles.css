@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&family=Rubik:wght@400;500;600;700&display=swap');
+
+:root {
+    --primary: #4f46e5;
+    --primary-hover: #4338ca;
+    --primary-light: #e0e7ff;
+    --accent: #0284c7;
+    --bg-main: #f8fafc;
+    --card-bg: #ffffff;
+    --border-color: #e2e8f0;
+    --text-primary: #0f172a;
+    --text-muted: #64748b;
+}
+
+body {
+    font-family: 'Heebo', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    direction: rtl;
+}
+
+h1, h2, h3, h4, .font-heading {
+    font-family: 'Rubik', sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Transcript active row glow */
+.active-segment {
+    background-color: #eff6ff !important;
+    border-right: 4px solid #3b82f6 !important;
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.1);
+    transform: translateX(-2px);
+    transition: all 0.15s ease-in-out;
+}
+
+/* Audio scrub input slider styling */
+input[type=range] {
+    accent-color: #4f46e5;
+}
+
+/* Tag badge styling */
+.badge-focus-child {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+
+.badge-teacher {
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    color: white;
+}
+
+.badge-assistant {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    color: white;
+}
+
+.badge-peer {
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+    color: white;
+}
+
+/* Print styling for PDF export */
+@media print {
+    header, #audio-player-bar, .no-print {
+        display: none !important;
+    }
+    body {
+        background: white !important;
+        color: black !important;
+    }
+    .print-only {
+        display: block !important;
+    }
+}

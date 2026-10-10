@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מוניטור גן הילדים | Kindergarten Monitor</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800 flex flex-col pb-28">
+
+    <!-- Top Navigation Bar -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="app.showView('welcome')">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-indigo-500 text-white flex items-center justify-center shadow-md shadow-indigo-100">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 100-6 3 3 0 000 6z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg text-slate-900 leading-tight">מוניטור גן הילדים</h1>
+                    <span class="text-xs text-slate-500 font-medium">ניתוח שמע פדגוגי, תמלול ותובנות להורים</span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button type="button" 
+                        onclick="app.showView('welcome')"
+                        class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    <span>הקלטה חדשה</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+
+        <!-- ========================================== -->
+        <!-- VIEW 1: WELCOME & INGESTION -->
+        <!-- ========================================== -->
+        <section id="view-welcome" class="space-y-8">
+            <!-- Hero banner -->
+            <div class="bg-gradient-to-r from-indigo-900 via-indigo-800 to-slate-900 rounded-3xl p-6 sm:p-10 text-white shadow-xl relative overflow-hidden">
+                <div class="relative z-10 max-w-2xl">
+                    <span class="inline-block px-3 py-1 bg-indigo-500/30 text-indigo-200 text-xs rounded-full font-semibold mb-3 border border-indigo-400/20">
+                        גרסה 1.0 • תמיכה מובנית בעברית
+                    </span>
+                    <h2 class="text-2xl sm:text-4xl font-extrabold mb-3 leading-tight">
+                        שקט נפשי עבור ההורים: הבנה מלאה של מה שקורה בגן
+                    </h2>
+                    <p class="text-indigo-100 text-sm sm:text-base leading-relaxed mb-6">
+                        טען הקלטה של יום שלם (עד 10 שעות), תייג את קולות הגננות והילד, וקבל תמלול מסונכרן ודוח פדגוגי מעמיק הכולל מענה ממוקד לשאלותיך, ציר זמן וזיהוי נורות אזהרה.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Ingestion Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Option 1: Local file path (Instant for 1GB files) -->
+                <div class="lg:col-span-7 bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm">1</div>
+                            <h3 class="font-bold text-base sm:text-lg text-slate-800">טעינה מהירה מקובץ מקומי (מומלץ לקבצים גדולים)</h3>
+                        </div>
+                    </div>
+                    <p class="text-xs sm:text-sm text-slate-500 mb-5">
+                        מבצע עיבוד ישיר ללא צורך בהעלאת קובץ כבד דרך הדפדפן. אידיאלי לקבצים של 5–10 שעות (~200MB-1GB).
+                    </p>
+
+                    <!-- Fast sample loader button -->
+                    <div class="mb-5 p-3 bg-indigo-50/70 border border-indigo-100 rounded-xl flex items-center justify-between">
+                        <div class="text-xs text-indigo-900 font-medium">
+                            טעינת דוגמה מהירה לבדיקה:
+                            <code class="block font-mono text-[11px] text-indigo-700 mt-0.5">sample_kindergarten_recording.mp3</code>
+                        </div>
+                        <button type="button" id="load-sample-btn"
+                                class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold shadow-sm transition-colors shrink-0">
+                            מלא נתוני דוגמה
+                        </button>
+                    </div>
+
+                    <form id="local-path-form" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">נתיב קובץ מלא במחשב</label>
+                            <input type="text" id="local-file-path-input" 
+                                   placeholder="/path/to/recording.mp3 או C:\recordings\day_recording.mp3"
+                                   class="w-full text-xs sm:text-sm font-mono px-3.5 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none" required />
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">כותרת ההקלטה</label>
+                                <input type="text" id="local-title-input" value="הקלטת יום בגן"
+                                       class="w-full text-xs sm:text-sm px-3.5 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">שם הילד/ה במוקד</label>
+                                <input type="text" id="local-child-input" placeholder="למשל: סביון / איתי"
+                                       class="w-full text-xs sm:text-sm px-3.5 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">
+                                מה תרצה שנבדוק במיוחד בהקלטה זו? (הנחיית מיקוד ראשונית)
+                            </label>
+                            <textarea id="local-prompt-input" rows="2"
+                                      placeholder="לדוגמה: לבדוק איך התייחסו אליו בזמן האוכל, האם בכה בחצר, והאם היתה אלימות מצד ילד אחר..."
+                                      class="w-full text-xs sm:text-sm px-3.5 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
+                        </div>
+
+                        <!-- ============================================================== -->
+                        <!-- KINDERGARTEN PROFILE & RECORDING CONTEXT (BIASING & REPORT)    -->
+                        <!-- ============================================================== -->
+                        <div class="bg-gradient-to-br from-indigo-50/70 via-white to-blue-50/50 rounded-2xl border border-indigo-200/80 p-4 sm:p-5 shadow-sm space-y-4">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2.5">
+                                    <span class="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-sm shadow-sm">🎒</span>
+                                    <div>
+                                        <h4 class="font-bold text-sm text-indigo-950 flex items-center gap-2">
+                                            <span>פרופיל הגן והקשר ההקלטה</span>
+                                            <span class="text-[10px] bg-indigo-100 text-indigo-700 font-semibold px-2 py-0.5 rounded-full">דיוק שמות ומונחים</span>
+                                        </h4>
+                                        <p class="text-[11px] text-slate-500">
+                                            הזן שמות ומונחים כדי להבטיח זיהוי מדויק (Biasing Prompt) במודל התמלול, תיוג מהיר ודוח עשיר
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <button type="button" id="btn-save-profile"
+                                            class="px-2.5 py-1 text-[11px] font-bold text-indigo-700 bg-white hover:bg-indigo-50 rounded-lg border border-indigo-200 shadow-xs transition-colors flex items-center gap-1">
+                                        <span>💾 שמור כקבוע</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 pt-1">
+                                <!-- Target Child -->
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-700 mb-1">
+                                        שם הילד/ה במוקד:
+                                    </label>
+                                    <input type="text" id="ctx-child-name" placeholder="למשל: סביון / איתי"
+                                           class="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+                                </div>
+
+                                <!-- Parents Names -->
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-700 mb-1">
+                                        שמות ההורים (נשמעים בבוקר/באיסוף):
+                                    </label>
+                                    <input type="text" id="ctx-parents-names" placeholder="למשל: דנה, אדר / אבא יוסי"
+                                           class="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+                                </div>
+
+                                <!-- Kindergarten Name -->
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-700 mb-1">
+                                        שם הגן / המסגרת:
+                                    </label>
+                                    <input type="text" id="ctx-kindergarten-name" placeholder="למשל: גן סביון / מעון הפרחים"
+                                           class="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+                                </div>
+
+                                <!-- Staff Members & Roles -->
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-700 mb-1">
+                                        צוות הגן ותפקידים:
+                                    </label>
+                                    <input type="text" id="ctx-staff-names" placeholder="למשל: מיכל (גננת), עליזה (סייעת)"
+                                           class="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+                                </div>
+
+                                <!-- Friends & Classmates -->
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-700 mb-1">
+                                        חברים וילדים נוספים בגן:
+                                    </label>
+                                    <input type="text" id="ctx-friends-names" placeholder="למשל: דני, עומר, ליה, יונתן"
+                                           class="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+                                </div>
+
+                                <!-- Key Terms & Transitional Objects -->
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-700 mb-1">
+                                        חפצי מעבר ומילות מפתח:
+                                    </label>
+                                    <input type="text" id="ctx-keywords" placeholder="למשל: מוצץ, שמיכי, בקבוק, דובי"
+                                           class="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+                                </div>
+                            </div>
+
+                            <!-- Custom Notes for Today -->
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-700 mb-1">
+                                    דגשים להקלטה זו או אירוע חריג:
+                                </label>
+                                <input type="text" id="ctx-custom-notes" placeholder="למשל: הייתה גננת מחליפה בבוקר / לבדוק ירידה לחצר והתרחשות ליד ארגז החול"
+                                       class="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+                            </div>
+
+                            <div class="text-[10px] text-indigo-900 bg-indigo-50/80 p-2.5 rounded-xl border border-indigo-100 flex items-center justify-between">
+                                <div class="flex items-center gap-1.5">
+                                    <span>🎯 <strong>Biasing Prompt מוטמע:</strong> המערכת מייצרת פרומפט בסיס עשיר המתאר את שגרת הגן, כניסת בוקר, מפגש, חצר, ארוחה, מנוחה וצלילים צפויים (בכי, דיבור, הרגעה) כדי למנוע שיבושים.</span>
+                                </div>
+                                <span id="profile-saved-badge" class="hidden text-emerald-700 font-bold shrink-0">✓ נשמר בדפדפן</span>
+                            </div>
+                        </div>
+
+                        <!-- ============================================================== -->
+                        <!-- 3-STAGE PIPELINE SETTINGS ARCHITECTURE                        -->
+                        <!-- ============================================================== -->
+                        <div class="mt-6 pt-5 border-t border-slate-200 space-y-4">
+                            <!-- Header -->
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-100">
+                                <div>
+                                    <h4 class="font-black text-sm text-slate-800 flex items-center gap-2">
+                                        <span>⚙️ הגדרת שלבי הניתוח ומודלי ה-AI:</span>
+                                    </h4>
+                                    <p class="text-xs text-slate-500 mt-0.5">
+                                        שליטה מלאה במודל המופעל בכל שלב (תמלול, סריקת בכי, והפקת דוח פדגוגי)
+                                    </p>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[11px] text-emerald-700 font-semibold bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 flex items-center gap-1">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> נשמר אוטומטית בדפדפן
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- 3 Pipeline Stage Cards Grid -->
+                            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                                
+                                <!-- ============================================== -->
+                                <!-- STAGE 1: SPEECH-TO-TEXT & SPEAKER DIARIZATION -->
+                                <!-- ============================================== -->
+                                <div class="bg-indigo-50/50 p-4 rounded-2xl border border-indigo-200/80 flex flex-col justify-between space-y-3">
+                                    <div>
+                                        <div class="flex items-center justify-between mb-2">
+                                            <div class="flex items-center gap-2">
+                                                <span class="w-7 h-7 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-sm">1</span>
+                                                <div>
+                                                    <h5 class="font-bold text-xs text-indigo-950">שלב 1: תמלול וזיהוי דוברים</h5>
+                                                    <span class="text-[10px] text-indigo-700">Speech-to-Text & Diarization</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="text-[11px] text-slate-600 leading-snug mb-3">
+                                            המרת שמע לטקסט עברי והפרדה בין קולות (גננות, סייעות, ילדים).
+                                        </p>
+
+                                        <div class="space-y-2.5">
+                                            <div>
+                                                <label class="block text-[11px] font-bold text-slate-700 mb-1">ספק תמלול:</label>
+                                                <select id="stt-provider-select" onchange="app.onSTTProviderChange()" class="w-full text-xs border border-slate-300 rounded-lg px-2.5 py-2 bg-white font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                                                    <option value="gladia">Gladia (v2) – מומלץ ביותר לעברית ורעש כיתה</option>
+                                                    <option value="openrouter" selected>OpenRouter (בחירת כל מודל, כולל MAI-Transcribe 2)</option>
+                                                    <option value="openai_compatible">OpenAI Whisper / Groq</option>
+                                                    <option value="deepgram">Deepgram (Nova-3)</option>
+                                                    <option value="mock">מצב הדגמה חינמי (Mock STT)</option>
+                                                </select>
+                                            </div>
+
+                                            <!-- OpenRouter STT Model Selection (Visible when OpenRouter is selected) -->
+                                            <div id="openrouter-stt-group" class="p-3 bg-white/90 rounded-xl border border-indigo-200 space-y-2">
+                                                <div class="flex items-center justify-between">
+                                                    <label class="block text-[11px] font-bold text-indigo-950">מודל תמלול מ-OpenRouter:</label>
+                                                    <span class="text-[10px] text-indigo-600 font-semibold font-mono">מותאם אישית</span>
+                                                </div>
+                                                <input type="text" id="cfg-openrouter-stt-model" list="openrouter-stt-model-suggestions"
+                                                       value="elevenlabs/scribe-v2"
+                                                       placeholder="elevenlabs/scribe-v2 או כל מודל אחר"
+                                                       class="w-full text-xs font-mono border border-slate-300 rounded-lg px-2.5 py-1.5 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none font-medium" />
+                                                <datalist id="openrouter-stt-model-suggestions">
+                                                    <option value="elevenlabs/scribe-v2">ElevenLabs Scribe v2 (זיהוי דוברים Diarization, התאמת מונחים ואירועי קול)</option>
+                                                    <option value="microsoft/mai-transcribe-2">Microsoft MAI-Transcribe 2 (זיהוי דוברים Diarization מובנה)</option>
+                                                    <option value="openai/whisper-large-v3">OpenAI Whisper Large V3 ($0.000008 לשנייה)</option>
+                                                    <option value="google/gemini-2.5-flash">Google Gemini 2.5 Flash (תמלול מולטימודלי)</option>
+                                                </datalist>
+                                                <div class="text-[10px] text-indigo-900 leading-tight bg-indigo-50/80 p-2 rounded-lg border border-indigo-100">
+                                                    ✨ <strong>תמיכה בזיהוי דוברים (Diarization):</strong> המודלים <code>elevenlabs/scribe-v2</code> ו-<code>microsoft/mai-transcribe-2</code> תומכים ב-Diarization מלא ומפרידים בין הדוברים השונים בהקלטה.
+                                                </div>
+                                            </div>
+
+                                            <!-- Gladia Key Input (Visible when Gladia is selected) -->
+                                            <div id="gladia-key-group" class="hidden p-3 bg-white/90 rounded-xl border border-indigo-200 space-y-2">
+                                                <label class="block text-[11px] font-bold text-slate-800">Gladia API Key:</label>
+                                                <input type="password" id="cfg-gladia-key" placeholder="sk_..." class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs font-mono bg-white" />
+                                                <div class="flex items-center justify-between text-[10px]">
+                                                    <span class="text-slate-500">app.gladia.io</span>
+                                                    <a href="https://app.gladia.io" target="_blank" class="text-indigo-600 hover:underline font-semibold">קבל 50€ חינם ↗</a>
+                                                </div>
+                                            </div>
+
+                                            <!-- OpenAI / Groq Config Group -->
+                                            <div id="openai-key-group" class="hidden p-3 bg-white/90 rounded-xl border border-indigo-200 space-y-2">
+                                                <div>
+                                                    <label class="block text-[11px] font-bold text-slate-800">API Key:</label>
+                                                    <input type="password" id="cfg-openai-stt-key" placeholder="gsk_... או sk-... (או השאר ריק עבור OpenRouter)" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs font-mono bg-white" />
+                                                </div>
+                                                <div>
+                                                    <label class="block text-[11px] font-bold text-slate-800">Base URL:</label>
+                                                    <input type="text" id="cfg-openai-stt-base-url" value="https://api.groq.com/openai/v1" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs font-mono bg-white" />
+                                                </div>
+                                                <div>
+                                                    <label class="block text-[11px] font-bold text-slate-800">Model:</label>
+                                                    <input type="text" id="cfg-openai-stt-model" value="whisper-large-v3" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs font-mono bg-white" />
+                                                </div>
+                                            </div>
+
+                                            <!-- Deepgram Key Input -->
+                                            <div id="deepgram-key-group" class="hidden p-3 bg-white/90 rounded-xl border border-indigo-200 space-y-1">
+                                                <label class="block text-[11px] font-bold text-slate-800">Deepgram API Key:</label>
+                                                <input type="password" id="cfg-deepgram-key" placeholder="מפתח Deepgram" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs font-mono bg-white" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-[10px] text-slate-500 pt-1 border-t border-indigo-100 flex items-center justify-between">
+                                        <span>פלט: תמליל גולמי + קטעי קול מבודדים</span>
+                                    </div>
+                                </div>
+
+                                <!-- ============================================== -->
+                                <!-- STAGE 2: ACOUSTIC & DISTRESS LISTENER         -->
+                                <!-- ============================================== -->
+                                <div class="bg-amber-50/50 p-4 rounded-2xl border border-amber-200/80 flex flex-col justify-between space-y-3">
+                                    <div>
+                                        <div class="flex items-center justify-between mb-2">
+                                            <div class="flex items-center gap-2">
+                                                <span class="w-7 h-7 rounded-lg bg-amber-600 text-white flex items-center justify-center font-bold text-xs shadow-sm">2</span>
+                                                <div>
+                                                    <h5 class="font-bold text-xs text-amber-950">שלב 2: סריקה אקוסטית והאזנה</h5>
+                                                    <span class="text-[10px] text-amber-700">Audio Screener & Crying Detection</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="text-[11px] text-slate-600 leading-snug mb-3">
+                                            סריקת תדרי בכי (1.5-4kHz) וקפיצות עוצמה, ואימות ישיר של בכי/מצוקה ע״י מודל שמע.
+                                        </p>
+
+                                        <div class="space-y-2.5">
+                                            <div>
+                                                <div class="flex items-center justify-between mb-1">
+                                                    <label class="block text-[11px] font-bold text-slate-700">מודל האזנה ישיר (Audio LLM):</label>
+                                                    <span class="text-[10px] text-amber-700 font-semibold font-mono">Multimodal</span>
+                                                </div>
+                                                <input type="text" id="cfg-audio-llm-model" list="audio-model-suggestions"
+                                                       value="google/gemini-2.5-flash"
+                                                       placeholder="google/gemini-2.5-flash"
+                                                       class="w-full text-xs font-mono border border-slate-300 rounded-lg px-2.5 py-2 bg-white focus:ring-2 focus:ring-amber-500 focus:outline-none font-medium" />
+                                                <datalist id="audio-model-suggestions">
+                                                    <option value="google/gemini-2.5-flash">Google Gemini 2.5 Flash (מומלץ ומהיר - $0.0002 לקליפ)</option>
+                                                    <option value="google/gemini-2.5-flash-lite">Google Gemini 2.5 Flash Lite</option>
+                                                    <option value="google/gemini-2.0-flash">Google Gemini 2.0 Flash</option>
+                                                </datalist>
+                                            </div>
+
+                                            <div class="p-2.5 bg-amber-100/70 rounded-xl text-[10px] text-amber-950 space-y-1 border border-amber-200/50">
+                                                <div class="font-bold flex items-center gap-1">
+                                                    <span>⚡ סריקה חכמה וחסכונית:</span>
+                                                </div>
+                                                <p class="leading-relaxed">
+                                                    האלגוריתם שולח רק חלונות שבהם זוהתה אנרגיה חריגה (כ-8–15 קטעים ביום). עלות כוללת: פחות מחצי סנט ליום שלם.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-[10px] text-slate-500 pt-1 border-t border-amber-100 flex items-center justify-between">
+                                        <span>פלט: אירועי בכי מאומתים, טונים חריגים ומשכי זמן</span>
+                                    </div>
+                                </div>
+
+                                <!-- ============================================== -->
+                                <!-- STAGE 3: PEDAGOGICAL ANALYSIS & REPORTING      -->
+                                <!-- ============================================== -->
+                                <div class="bg-purple-50/50 p-4 rounded-2xl border border-purple-200/80 flex flex-col justify-between space-y-3">
+                                    <div>
+                                        <div class="flex items-center justify-between mb-2">
+                                            <div class="flex items-center gap-2">
+                                                <span class="w-7 h-7 rounded-lg bg-purple-600 text-white flex items-center justify-center font-bold text-xs shadow-sm">3</span>
+                                                <div>
+                                                    <h5 class="font-bold text-xs text-purple-950">שלב 3: הפקת דוח פדגוגי</h5>
+                                                    <span class="text-[10px] text-purple-700">Analysis & Insights Generation</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="text-[11px] text-slate-600 leading-snug mb-3">
+                                            ניתוח מעמיק של התמליל והאירועים האקוסטיים, הפקת ציר זמן ונורות אזהרה.
+                                        </p>
+
+                                        <div class="space-y-2.5">
+                                            <div>
+                                                <div class="flex items-center justify-between mb-1">
+                                                    <label class="block text-[11px] font-bold text-slate-700">מודל ניתוח הדוח (Reasoning LLM):</label>
+                                                    <span class="text-[10px] text-purple-700 font-semibold font-mono">OpenRouter</span>
+                                                </div>
+                                                <input type="text" id="cfg-openrouter-model" list="openrouter-model-suggestions"
+                                                       value="google/gemini-2.5-flash"
+                                                       placeholder="google/gemini-2.5-flash"
+                                                       class="w-full text-xs font-mono border border-slate-300 rounded-lg px-2.5 py-2 bg-white focus:ring-2 focus:ring-purple-500 focus:outline-none font-medium" />
+                                                <datalist id="openrouter-model-suggestions">
+                                                    <option value="google/gemini-2.5-flash">Google Gemini 2.5 Flash (מהיר ומשתלם)</option>
+                                                    <option value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet (ניתוח פדגוגי וספרותי מעמיק)</option>
+                                                    <option value="openai/gpt-4o">OpenAI GPT-4o</option>
+                                                    <option value="meta-llama/llama-3.3-70b-instruct">Meta Llama 3.3 70B</option>
+                                                    <option value="qwen/qwen-2.5-72b-instruct">Qwen 2.5 72B Instruct</option>
+                                                </datalist>
+                                            </div>
+
+                                            <div class="p-2.5 bg-purple-100/70 rounded-xl text-[10px] text-purple-950 space-y-1 border border-purple-200/50">
+                                                <div class="font-bold flex items-center gap-1">
+                                                    <span>📝 דוח יומי מקיף:</span>
+                                                </div>
+                                                <p class="leading-relaxed">
+                                                    מנתח את יחס הצוות, תגובות לבכי, מעברים בסדר היום ומענה לשאלת המיקוד של ההורה.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-[10px] text-slate-500 pt-1 border-t border-purple-100 flex items-center justify-between">
+                                        <span>פלט: דוח פדגוגי מלא + ציר זמן וצ'אט סייר</span>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- SHARED OPENROUTER API KEY BAR -->
+                            <div class="bg-gradient-to-r from-slate-900 to-indigo-950 text-white p-4 rounded-2xl shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3 border border-slate-800">
+                                <div class="flex items-center gap-3">
+                                    <span class="w-9 h-9 rounded-xl bg-purple-500/20 text-purple-300 border border-purple-400/30 flex items-center justify-center font-bold text-base">🔑</span>
+                                    <div>
+                                        <div class="font-bold text-xs text-white flex items-center gap-1.5">
+                                            <span>OpenRouter API Key (מפתח מרכזי)</span>
+                                            <span class="text-[10px] text-purple-300 bg-purple-900/60 px-2 py-0.5 rounded-full border border-purple-500/30">מפעיל את שלבים 1, 2 ו-3</span>
+                                        </div>
+                                        <div class="text-[11px] text-slate-300">
+                                            מפתח יחיד זה מפעיל את תמלול OpenRouter (MAI-Transcribe 2 / Whisper), סריקת השמע (Gemini 2.5), והפקת הדוח הפדגוגי.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2 w-full sm:w-auto">
+                                    <input type="password" id="cfg-openrouter-key"
+                                           placeholder="sk-or-v1-..."
+                                           class="w-full sm:w-64 px-3 py-2 rounded-xl text-xs font-mono bg-slate-800 border border-slate-700 text-white placeholder-slate-400 focus:ring-2 focus:ring-purple-400 focus:outline-none" />
+                                    <a href="https://openrouter.ai/keys" target="_blank"
+                                       class="px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white text-[11px] font-bold rounded-xl whitespace-nowrap transition-colors flex items-center gap-1 shadow-sm">
+                                        <span>קבל מפתח</span> ↗
+                                    </a>
+                                </div>
+                        </div>
+
+                        <!-- Submit Form Button -->
+                        <div class="pt-3 flex items-center justify-end">
+                            <button type="submit" id="submit-path-btn"
+                                    class="w-full sm:w-auto px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-extrabold shadow-md shadow-indigo-100 transition-all flex items-center justify-center gap-2">
+                                <span>התחל ניתוח מהיר של ההקלטה</span>
+                                <svg class="w-4 h-4 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Option 2: Browser Upload & Recent Sessions -->
+                <div class="lg:col-span-5 space-y-6">
+                    <!-- Upload Box -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                        <div class="flex items-center gap-2.5 mb-3">
+                            <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-sm">2</div>
+                            <h3 class="font-bold text-base text-slate-800">העלאת קובץ מהדפדפן</h3>
+                        </div>
+                        <form id="upload-form" class="space-y-3">
+                            <input type="file" id="file-upload-input" accept="audio/*" class="block w-full text-xs text-slate-500 file:mr-2 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+                            <input type="text" id="upload-title-input" placeholder="כותרת ההקלטה" class="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg" />
+                            <input type="text" id="upload-child-input" placeholder="שם הילד/ה במוקד" class="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg" />
+                            <select id="upload-stt-provider-select" class="w-full text-xs border border-slate-300 rounded-lg p-2 bg-white">
+                                <option value="gladia">Gladia v2</option>
+                                <option value="openrouter_whisper">OpenRouter (Whisper Large V3)</option>
+                                <option value="openrouter">OpenRouter (Gemini 2.5 Audio)</option>
+                                <option value="openai_compatible">OpenAI Whisper / Groq</option>
+                                <option value="deepgram">Deepgram Nova-3</option>
+                                <option value="mock" selected>מצב הדגמה מהיר (Mock)</option>
+                            </select>
+                            <button type="submit" id="submit-upload-btn" class="w-full py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-bold transition-colors">
+                                העלה והתחל ניתוח
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Recent Sessions List -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                        <h4 class="font-bold text-sm text-slate-800 mb-3 flex items-center gap-2">
+                            <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            הקלטות שנותחו לאחרונה
+                        </h4>
+                        <div id="recent-sessions-list" class="space-y-2">
+                            <p class="text-xs text-slate-400">טוען היסטוריה...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 2: PROCESSING PROGRESS -->
+        <!-- ========================================== -->
+        <section id="view-processing" class="hidden max-w-2xl mx-auto py-12">
+            <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-xl text-center space-y-6">
+                <div class="w-16 h-16 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto animate-pulse">
+                    <svg class="w-8 h-8 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">מעבד את הקלטת היום בגן</h3>
+                    <p id="processing-filename" class="text-xs font-mono text-slate-500"></p>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="space-y-2">
+                    <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+                        <div id="processing-progress-bar" class="bg-gradient-to-r from-indigo-500 to-indigo-600 h-3 rounded-full transition-all duration-500" style="width: 15%"></div>
+                    </div>
+                    <div class="flex items-center justify-between text-xs text-slate-500 font-medium">
+                        <span id="processing-status-message">מתחיל עיבוד...</span>
+                        <span id="processing-progress-text">15%</span>
+                    </div>
+                </div>
+
+                <!-- Steps visual indicator -->
+                <div class="grid grid-cols-4 gap-2 pt-4 border-t border-slate-100 text-center">
+                    <div class="p-2 rounded-lg bg-indigo-50/60 text-indigo-700 text-xs font-semibold">1. בדיקת קובץ</div>
+                    <div class="p-2 rounded-lg bg-indigo-50/60 text-indigo-700 text-xs font-semibold">2. סינון רעש 16kHz</div>
+                    <div class="p-2 rounded-lg bg-indigo-50/60 text-indigo-700 text-xs font-semibold">3. זיהוי דיבור עברי</div>
+                    <div class="p-2 rounded-lg bg-slate-100 text-slate-500 text-xs font-semibold">4. דגימות קול</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 3: VOICE TAGGING & FOCUS SETUP -->
+        <!-- ========================================== -->
+        <section id="view-tagging" class="hidden space-y-6 max-w-4xl mx-auto">
+            <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
+                <!-- Header -->
+                <div class="border-b border-slate-100 pb-5">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800">שלב קריטי: זיהוי קולות</span>
+                        <span class="text-xs text-slate-400">• שלב אינטראקטיבי להבטחת דיוק מרבי</span>
+                    </div>
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">
+                        זיהוי משתתפים והגדרת הילד במוקד
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
+                        המערכת זיהתה את הקולות הראשיים בהקלטה. האזן לדגימת קול קצרה של כל דובר (5–8 שניות), תייג את שמו (למשל: "גננת מיכל", "סייעת עליזה"), וסמן מי מתוכם הוא הילד שלך.
+                    </p>
+                </div>
+
+                <!-- Speakers list container -->
+                <div id="tagging-speakers-list" class="space-y-4">
+                    <!-- Populated dynamically by taggingController -->
+                </div>
+
+                <!-- Custom Parent Focus Prompt -->
+                <div class="bg-indigo-50/50 p-5 rounded-2xl border border-indigo-100 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <label class="block text-sm font-bold text-slate-800">
+                            מה תרצה שהמודל יבדוק במיוחד בהקלטה של יום זה?
+                        </label>
+                        <span class="text-xs text-indigo-600 font-semibold">הנחיית מיקוד מותאמת אישית</span>
+                    </div>
+                    <textarea id="tagging-focus-prompt" rows="3"
+                              placeholder="פרט כאן כל נקודה או חשש: למשל 'האם צעקו עליו?', 'האם שתה מים ואכל את הכריך?', 'איך הגיבו כשהוא בכה?', 'האם דני הציק לו?'..."
+                              class="w-full text-xs sm:text-sm px-3.5 py-2.5 border border-indigo-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white"></textarea>
+
+                    <!-- Quick Preset Chips -->
+                    <div class="flex flex-wrap gap-2 pt-1">
+                        <span class="text-xs text-slate-500 font-medium py-1">נושאים מומלצים לבדיקה:</span>
+                        <button type="button" onclick="taggingController.setFocusPreset('מענה לבכי ומצוקה')"
+                                class="text-xs px-2.5 py-1 rounded-lg bg-white border border-indigo-200 text-indigo-700 hover:bg-indigo-100 transition-colors">
+                            😢 מענה לבכי ומצוקה
+                        </button>
+                        <button type="button" onclick="taggingController.setFocusPreset('התנהלות ואכילה בארוחות')"
+                                class="text-xs px-2.5 py-1 rounded-lg bg-white border border-indigo-200 text-indigo-700 hover:bg-indigo-100 transition-colors">
+                            🥣 אכילה ושתייה בארוחות
+                        </button>
+                        <button type="button" onclick="taggingController.setFocusPreset('השתתפות במפגש בוקר')"
+                                class="text-xs px-2.5 py-1 rounded-lg bg-white border border-indigo-200 text-indigo-700 hover:bg-indigo-100 transition-colors">
+                            🤝 השתתפות במפגש בוקר
+                        </button>
+                        <button type="button" onclick="taggingController.setFocusPreset('בדיקת נורות אזהרה, צעקות או אלימות בחצר')"
+                                class="text-xs px-2.5 py-1 rounded-lg bg-white border border-indigo-200 text-indigo-700 hover:bg-indigo-100 transition-colors">
+                            ⚠️ נורות אזהרה ואלימות
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="pt-4 flex items-center justify-end gap-3 border-t border-slate-100">
+                    <button type="button" onclick="app.showView('welcome')" class="px-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-800">
+                        ביטול
+                    </button>
+                    <button type="button" id="submit-tagging-btn" onclick="taggingController.submitTagging()"
+                            class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-lg shadow-indigo-100 transition-all flex items-center gap-2">
+                        <span>אשר תיוג והפק דוח פדגוגי מקיף</span>
+                        <svg class="w-4 h-4 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 4: KINDERGARTEN DASHBOARD (REPORT + TRANSCRIPT) -->
+        <!-- ========================================== -->
+        <section id="view-dashboard" class="hidden space-y-6">
+            <!-- Session Summary Header Banner -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div class="space-y-1">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold">דוח מוכן</span>
+                        <h2 id="dash-title" class="text-lg sm:text-xl font-extrabold text-slate-900">הקלטת יום בגן</h2>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-3 text-xs text-slate-500">
+                        <span>קובץ: <b id="dash-filename" class="font-mono text-slate-700"></b></span>
+                        <span>•</span>
+                        <span>משך זמן כולל: <b id="dash-duration" class="font-mono text-slate-700"></b></span>
+                        <span>•</span>
+                        <span>הילד במוקד: <b id="dash-child-name" class="text-emerald-700 font-bold"></b></span>
+                    </div>
+                </div>
+
+                <!-- Export actions -->
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="app.openTaggingForCurrentSession()"
+                            class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 transition-colors shadow-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        <span>תייג מחדש / ערוך שמות דוברים</span>
+                    </button>
+                    <button type="button" onclick="app.promptRegenerateReport()"
+                            class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors shadow-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                        <span>הפק דוח מחדש (ללא תמלול מחדש)</span>
+                    </button>
+                    <button type="button" onclick="app.downloadMarkdown()"
+                            class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg>
+                        <span>הורד דוח (Markdown)</span>
+                    </button>
+                    <button type="button" onclick="app.printReport()"
+                            class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                        </svg>
+                        <span>הדפס / שמור כ-PDF</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Coverage & Acoustic Reality Banner -->
+            <div id="dash-acoustic-banner" class="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-lg shrink-0">🔊</div>
+                    <div>
+                        <h4 class="font-extrabold text-sm text-slate-800 flex items-center gap-2">
+                            <span>שכבת ניתוח אקוסטי ומצבי מצוקה</span>
+                            <span id="dash-crying-badge" class="px-2 py-0.5 rounded-full text-xs font-bold bg-rose-100 text-rose-800 hidden">🚨 אותר בכי</span>
+                        </h4>
+                        <p id="dash-coverage-text" class="text-xs text-slate-600 mt-0.5">
+                            בודק כיסוי תמלול, זיהוי בכי ופערי דיבור...
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button type="button" id="dash-jump-distress-btn" onclick="app.jumpToFirstDistress()"
+                            class="px-3 py-1.5 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white shadow-sm transition-all hidden flex items-center gap-1.5">
+                        <span>▶ קפוץ לרגע הבכי / מצוקה</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Distress Episodes Card (Appears if crying or shouting was detected) -->
+            <div id="dash-distress-episodes-card" class="bg-white rounded-2xl border border-rose-200 p-5 shadow-sm space-y-3 hidden">
+                <div class="flex items-center justify-between">
+                    <h3 class="font-bold text-sm text-rose-950 flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-rose-600 animate-pulse"></span>
+                        <span>אירועים קוליים ומצבי מצוקה שאותרו באודיו</span>
+                    </h3>
+                    <span class="text-xs text-rose-700 font-medium">זוהה ישירות מעוצמת השמע ותדרי הבכי</span>
+                </div>
+                <div id="dash-distress-episodes-list" class="space-y-2">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Tab Navigation -->
+            <div class="flex border-b border-slate-200 gap-2">
+                <button id="tab-btn-report" onclick="app.switchTab('report')"
+                        class="px-4 py-2.5 text-sm font-bold border-b-2 border-indigo-600 text-indigo-600 transition-colors">
+                    📑 דוח פדגוגי מקיף
+                </button>
+                <button id="tab-btn-chat" onclick="app.switchTab('chat')"
+                        class="px-4 py-2.5 text-sm font-medium text-slate-500 hover:text-slate-800 border-b-2 border-transparent transition-colors flex items-center gap-1.5">
+                    <span>💬 צ'אט סוכן AI (שאלות על ההקלטה)</span>
+                    <span class="text-[10px] bg-indigo-100 text-indigo-700 font-bold px-1.5 py-0.5 rounded-full">חדש</span>
+                </button>
+                <button id="tab-btn-transcript" onclick="app.switchTab('transcript')"
+                        class="px-4 py-2.5 text-sm font-medium text-slate-500 hover:text-slate-800 border-b-2 border-transparent transition-colors">
+                    🎙️ תמלול מסונכרן להאזנה
+                </button>
+                <button id="tab-btn-timeline" onclick="app.switchTab('timeline')"
+                        class="px-4 py-2.5 text-sm font-medium text-slate-500 hover:text-slate-800 border-b-2 border-transparent transition-colors">
+                    ⏰ ציר זמן שגרת היום
+                </button>
+            </div>
+
+            <!-- TAB 1: AI PEDAGOGICAL REPORT -->
+            <div id="tab-content-report" class="space-y-6">
+                <!-- Executive Summary -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+                    <h3 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-indigo-600"></span>
+                        1. תקציר מנהלים
+                    </h3>
+                    <p id="report-exec-summary" class="text-sm text-slate-700 leading-relaxed pr-4"></p>
+                </div>
+
+                <!-- Custom Focus Inquiry Response -->
+                <div id="report-focus-section" class="bg-indigo-50/70 p-6 rounded-2xl border border-indigo-100 shadow-sm space-y-2">
+                    <h3 class="font-extrabold text-indigo-950 text-base flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-indigo-600"></span>
+                        2. מענה ממוקד לבקשת ההורה
+                    </h3>
+                    <p id="report-focus-response" class="text-sm text-indigo-900 leading-relaxed pr-4 whitespace-pre-line"></p>
+                </div>
+
+                <!-- Emotional Profile & Staff Evaluation Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+                        <h3 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+                            3. מצב רגשי וחברתי של הילד
+                        </h3>
+                        <p id="report-emotional-analysis" class="text-xs sm:text-sm text-slate-700 leading-relaxed pr-4"></p>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+                        <h3 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+                            4. התנהלות הצוות החינוכי
+                        </h3>
+                        <p id="report-staff-evaluation" class="text-xs sm:text-sm text-slate-700 leading-relaxed pr-4 whitespace-pre-line"></p>
+                    </div>
+                </div>
+
+                <!-- Red Flags & Notable Incidents -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                            5. נורות אזהרה ואירועים חריגים
+                        </h3>
+                        <span class="text-xs text-slate-400">לחיצה על "נגן" תקפיץ את הנגן לרגע המדויק</span>
+                    </div>
+                    <div id="report-red-flags-container" class="space-y-3">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Recommendations for Parents -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+                    <h3 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-purple-600"></span>
+                        6. המלצות ונקודות לשיחה עבור ההורים
+                    </h3>
+                    <p id="report-recommendations" class="text-xs sm:text-sm text-slate-700 leading-relaxed pr-4 whitespace-pre-line"></p>
+                </div>
+            </div>
+
+            <!-- TAB 2: SYNCED TRANSCRIPT -->
+            <div id="tab-content-transcript" class="hidden space-y-4">
+                <!-- Transcript Filter Bar -->
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                    <div class="flex flex-col sm:flex-row gap-3 sm:items-center justify-between">
+                        <div class="relative flex-1">
+                            <input type="text" id="transcript-search-input" placeholder="חיפוש מילה או משפט בתמליל..."
+                                   class="w-full text-xs sm:text-sm pr-9 pl-4 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+                            <svg class="w-4 h-4 text-slate-400 absolute right-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+
+                        <div class="flex items-center gap-3">
+                            <select id="transcript-speaker-filter" class="text-xs border border-slate-300 rounded-xl px-3 py-2 bg-white">
+                                <option value="">כל הדוברים</option>
+                            </select>
+
+                            <label class="flex items-center gap-1.5 text-xs text-slate-600 cursor-pointer">
+                                <input type="checkbox" id="transcript-flagged-filter" class="rounded text-indigo-600 focus:ring-indigo-500 border-slate-300">
+                                <span>אירועים חריגים בלבד</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Hour Jump Pills Bar -->
+                    <div id="transcript-hours-bar" class="flex flex-wrap items-center gap-1.5 pt-2.5 border-t border-slate-100">
+                        <span class="text-[11px] font-bold text-slate-500 ml-1">דילוג מהיר לשעה:</span>
+                        <!-- Rendered dynamically e.g. "כל היום (5 שעות)", "שעה 1 (00:00-01:00)", ... -->
+                    </div>
+                </div>
+
+                <!-- Pagination & Range Summary Header Bar -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs bg-slate-50 px-4 py-2.5 rounded-2xl border border-slate-200/80">
+                    <div class="flex items-center gap-2">
+                        <span id="transcript-count-label" class="font-bold text-slate-800">מציג מקטעים...</span>
+                        <span id="transcript-time-range-badge" class="font-mono text-[11px] bg-white border border-slate-200 px-2 py-0.5 rounded-md text-indigo-700 font-bold dir-ltr">
+                            00:00:00 - 00:00:00
+                        </span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-1.5">
+                            <label class="text-[11px] text-slate-500 font-medium">כמות להצגה:</label>
+                            <select id="transcript-page-size-select" onchange="app.changeTranscriptPageSize(this.value)" class="text-xs bg-white border border-slate-300 rounded-lg px-2 py-1 font-semibold text-slate-700">
+                                <option value="150">150 מקטעים</option>
+                                <option value="250" selected>250 מקטעים (מהיר וקליל)</option>
+                                <option value="500">500 מקטעים</option>
+                                <option value="2500">הכל בבת אחת (כל ההקלטה)</option>
+                            </select>
+                        </div>
+
+                        <!-- Top Mini Pagination -->
+                        <div id="transcript-top-pagination" class="flex items-center gap-1">
+                            <!-- e.g. < עמוד 1 מתוך 5 > -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transcript Bubbles Container -->
+                <div class="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    <div id="transcript-container" class="space-y-2 max-h-[620px] overflow-y-auto pl-2">
+                        <!-- Populated dynamically -->
+                    </div>
+
+                    <!-- Bottom Pagination Bar & Load More Button -->
+                    <div id="transcript-bottom-pagination" class="mt-4 pt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <!-- Populated dynamically: Page buttons, Load More button, etc. -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: CHRONOLOGICAL TIMELINE -->
+            <div id="tab-content-timeline" class="hidden">
+                <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                    <div>
+                        <h3 class="font-extrabold text-slate-900 text-lg">ציר זמן שגרת היום בגן</h3>
+                        <p class="text-xs text-slate-500">חלוקה כרונולוגית לפעילויות ושעות לאורך יום ההקלטה</p>
+                    </div>
+                    <div id="report-timeline-container" class="space-y-1">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: SMART AGENT CHAT -->
+            <div id="tab-content-chat" class="hidden space-y-4">
+                <!-- Header Card -->
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3">
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2">
+                            <span class="w-7 h-7 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-sm">💬</span>
+                            <h3 class="font-extrabold text-slate-900 text-base">צ'אט סוכן AI – תחקור ההקלטה והתמליל</h3>
+                            <span class="text-[11px] bg-emerald-50 text-emerald-700 font-semibold px-2 py-0.5 rounded-full border border-emerald-200">
+                                מצויד בכלים לחיפוש עמוק
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            הסוכן סורק את כל שעות ההקלטה, שולף הקשרי שיחה מלאים ומצטט חותמות זמן מדויקות שניתן להאזין להן בלחיצה.
+                        </p>
+                    </div>
+
+                    <!-- Clear / reload -->
+                    <button type="button" onclick="chatController.renderInitialWelcome()"
+                            class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors shrink-0">
+                        <span>נקה שיחה</span>
+                    </button>
+                </div>
+
+                <!-- Suggested Quick Prompts -->
+                <div class="bg-indigo-50/50 p-3.5 rounded-2xl border border-indigo-100 space-y-2">
+                    <span class="block text-xs font-bold text-indigo-950">💡 שאלות מהירות לדוגמה (לחץ לשאילתה ישירה):</span>
+                    <div class="flex flex-wrap gap-2">
+                        <button type="button" onclick="chatController.sendQuickQuestion('מתי הילד בכה וכיצד הצוות הגיב?')"
+                                class="text-xs px-2.5 py-1.5 rounded-xl bg-white border border-indigo-200 text-indigo-700 hover:bg-indigo-100 transition-colors shadow-2xs font-medium">
+                            😢 מתי הילד בכה וכיצד הצוות הגיב?
+                        </button>
+                        <button type="button" onclick="chatController.sendQuickQuestion('מתי דיברו על אוכל ואיך התנהלו הארוחות?')"
+                                class="text-xs px-2.5 py-1.5 rounded-xl bg-white border border-indigo-200 text-indigo-700 hover:bg-indigo-100 transition-colors shadow-2xs font-medium">
+                            🥣 מתי דיברו על אוכל ואיך התנהלו הארוחות?
+                        </button>
+                        <button type="button" onclick="chatController.sendQuickQuestion('האם היו צעקות, נזיפות או נורות אזהרה בהקלטה?')"
+                                class="text-xs px-2.5 py-1.5 rounded-xl bg-white border border-indigo-200 text-indigo-700 hover:bg-indigo-100 transition-colors shadow-2xs font-medium">
+                            ⚠️ האם היו צעקות, נזיפות או תקריות חריגות?
+                        </button>
+                        <button type="button" onclick="chatController.sendQuickQuestion('סכם את היחס והאינטראקציה של הצוות עם הילד במוקד')"
+                                class="text-xs px-2.5 py-1.5 rounded-xl bg-white border border-indigo-200 text-indigo-700 hover:bg-indigo-100 transition-colors shadow-2xs font-medium">
+                            🤝 סכם את היחס והתקשורת עם הילד במוקד
+                        </button>
+                        <button type="button" onclick="chatController.sendQuickQuestion('מה קרה בחצר ואיך הילדים שיחקו?')"
+                                class="text-xs px-2.5 py-1.5 rounded-xl bg-white border border-indigo-200 text-indigo-700 hover:bg-indigo-100 transition-colors shadow-2xs font-medium">
+                            🌳 מה קרה בחצר ואיך הילדים שיחקו?
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Chat Box Main Container -->
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-sm flex flex-col h-[650px] overflow-hidden">
+                    <!-- Messages Area -->
+                    <div id="chat-messages-container" class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 bg-slate-50/40">
+                        <!-- Populated by ChatController -->
+                    </div>
+
+                    <!-- Input Bar -->
+                    <div class="p-3 sm:p-4 bg-white border-t border-slate-200 space-y-2">
+                        <div class="flex items-center gap-2">
+                            <textarea id="chat-input" rows="1"
+                                      placeholder="שאל שאלה על ההקלטה (למשל: 'מתי שתו מים?', 'האם היה ריב בין ילדים?')..."
+                                      class="flex-1 text-xs sm:text-sm px-4 py-3 border border-slate-300 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:outline-none resize-none max-h-32 bg-slate-50/50"></textarea>
+                            <button type="button" id="chat-send-btn"
+                                    class="px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold text-xs sm:text-sm shadow-md shadow-indigo-100 transition-all flex items-center gap-1.5 shrink-0">
+                                <span>שאל</span>
+                                <svg class="w-4 h-4 rotate-180" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="flex items-center justify-between text-[11px] text-slate-400 px-1">
+                            <span>הקש Enter לשליחה (Shift+Enter לירידת שורה)</span>
+                            <span class="flex items-center gap-1 text-indigo-600 font-medium">
+                                <span>🎧</span>
+                                <span>לחיצה על חותמת זמן מפעילה את הנגן בדיוק באותה שנייה</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ========================================== -->
+    <!-- FLOATING PERSISTENT AUDIO PLAYER BAR -->
+    <!-- ========================================== -->
+    <div id="audio-player-bar" class="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-3 z-50 shadow-2xl transition-all duration-300">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center gap-3">
+            <!-- Controls & Times -->
+            <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
+                <div class="flex items-center gap-2">
+                    <button type="button" id="player-skip-back" title="15 שניות אחורה"
+                            class="p-2 text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-slate-100 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0019 16V8a1 1 0 00-1.6-.8l-5.333 4zM4.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0011 16V8a1 1 0 00-1.6-.8l-5.334 4z"></path>
+                        </svg>
+                    </button>
+
+                    <button type="button" id="player-play-btn"
+                            class="w-10 h-10 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white flex items-center justify-center shadow-md shadow-indigo-100 transition-colors">
+                        <svg id="player-play-icon" class="w-5 h-5 ml-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>
+                        </svg>
+                        <svg id="player-pause-icon" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+
+                    <button type="button" id="player-skip-forward" title="15 שניות קדימה"
+                            class="p-2 text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-slate-100 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.933 12.8a1 1 0 000-1.6L6.6 7.2A1 1 0 005 8v8a1 1 0 001.6.8l5.333-4zM19.933 12.8a1 1 0 000-1.6l-5.333-4A1 1 0 0013 8v8a1 1 0 001.6.8l5.333-4z"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="font-mono text-xs text-slate-600">
+                    <span id="player-time-current">00:00:00</span> / <span id="player-time-total" class="text-slate-400">00:00:00</span>
+                </div>
+            </div>
+
+            <!-- Scrub Slider & Acoustic Heatmap -->
+            <div class="flex-1 w-full flex flex-col gap-1 justify-center">
+                <!-- Interactive Heatmap / Waveform -->
+                <div id="player-heatmap-container" class="w-full relative h-3.5 bg-slate-100 rounded overflow-hidden cursor-pointer border border-slate-200" title="לחץ לדילוג ישיר (אדום = בכי, כתום = צעקות, אפור = ללא תמלול)">
+                    <canvas id="player-waveform-canvas" class="w-full h-full block"></canvas>
+                    <div id="player-heatmap-markers" class="w-full h-full absolute inset-0 pointer-events-none"></div>
+                </div>
+                <input type="range" id="player-scrub-slider" min="0" max="100" value="0" step="0.1"
+                       class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+            </div>
+
+            <!-- Playback Speed -->
+            <div class="flex items-center gap-2">
+                <button type="button" id="player-speed-btn"
+                        class="px-2.5 py-1 text-xs font-mono font-bold rounded-lg bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-700 transition-colors">
+                    <span id="player-speed-label">1.0x</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Scripts -->
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/audio_player.js"></script>
+    <script src="/static/js/tagging_modal.js"></script>
+    <script src="/static/js/chat_controller.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
