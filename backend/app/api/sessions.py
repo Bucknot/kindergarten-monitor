@@ -16,6 +16,7 @@ from backend.app.schemas import (
     RegenerateReportRequest
 )
 from backend.app.services.job_pipeline import job_pipeline
+from backend.app.services.speaker_service import speaker_service
 
 router = APIRouter(prefix="/sessions", tags=["sessions"])
 
@@ -276,6 +277,17 @@ async def get_session(session_id: str, db: AsyncSession = Depends(get_db)):
     session = result.scalar_one_or_none()
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
+
+    if session.speakers:
+        try:
+            samples_map = await speaker_service.get_all_speakers_samples(session.id, db)
+            for spk in session.speakers:
+                spk.samples = samples_map.get(spk.id, [])
+        except Exception as e:
+            # Non-blocking fallback
+            for spk in session.speakers:
+                spk.samples = []
+
     return session
 
 

@@ -71,3 +71,39 @@ async def configure_speakers_and_focus(
     background_tasks.add_task(job_pipeline.generate_final_report, session.id)
 
     return loaded_session
+
+
+from backend.app.schemas import SpeakerSampleItem
+from backend.app.services.speaker_service import speaker_service
+from typing import Dict
+
+
+@router.get("/{session_id}/samples", response_model=Dict[str, List[SpeakerSampleItem]])
+async def get_all_speakers_samples(
+    session_id: str,
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Returns multiple candidate speech sample clips for all speakers in the session.
+    """
+    session = await db.get(SessionModel, session_id)
+    if not session:
+        raise HTTPException(status_code=404, detail="Session not found")
+
+    return await speaker_service.get_all_speakers_samples(session_id, db)
+
+
+@router.get("/{session_id}/{speaker_id}/samples", response_model=List[SpeakerSampleItem])
+async def get_speaker_samples(
+    session_id: str,
+    speaker_id: str,
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Returns multiple candidate speech sample clips for a single speaker.
+    """
+    session = await db.get(SessionModel, session_id)
+    if not session:
+        raise HTTPException(status_code=404, detail="Session not found")
+
+    return await speaker_service.get_speaker_sample_clips(session_id, speaker_id, db)

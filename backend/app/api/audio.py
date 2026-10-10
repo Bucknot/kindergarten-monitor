@@ -31,6 +31,7 @@ async def stream_session_audio(
     return audio_service.stream_file_range(file_to_stream, range_header)
 
 
+from typing import Optional
 from pathlib import Path
 from backend.app.config import settings
 
@@ -38,12 +39,45 @@ from backend.app.config import settings
 async def get_speaker_snippet(
     session_id: str,
     speaker_tag: str,
+    start: Optional[float] = None,
+    duration: Optional[float] = None,
+    sample_idx: Optional[int] = None,
     db: AsyncSession = Depends(get_db)
 ):
     """
-    Returns the isolated 5-10 second audio snippet for a specific speaker.
-    Resilient to cache-reused sessions by falling back to disk search.
+    Returns an isolated audio snippet for a specific speaker.
+    Supports on-demand extraction for specific sample clips (start/duration),
+    as well as default 5-10 second snippets.
     """
+    # 1. On-demand sample clip extraction if start and duration are specified
+    if start is not None and duration is not None:
+        session = await db.get(SessionModel, session_id)
+        if session:
+            audio_source = session.optimized_file_path or session.raw_file_path
+            if audio_source and os.path.exists(audio_source):
+                # Unique filename based on speaker, start and duration (or sample_idx)
+                start_val = max(0.0, float(start))
+                dur_val = max(1.0, min(15.0, float(duration)))
+                idx_part = f"_s{sample_idx}" if sample_idx is not None else ""
+                clip_filename = f"{session_id}_spk_{speaker_tag}{idx_part}_{start_val:.1f}_{dur_val:.1f}.mp3"
+                clip_path = settings.snippet_dir / clip_filename
+
+                if clip_path.exists() and clip_path.stat().st_size > 500:
+                    return FileResponse(str(clip_path), media_type="audio/mpeg")
+
+                try:
+                    await audio_service.extract_snippet(
+                        audio_source,
+                        start_val,
+                        dur_val,
+                        str(clip_path)
+                    )
+                    if clip_path.exists() and clip_path.stat().st_size > 500:
+                        return FileResponse(str(clip_path), media_type="audio/mpeg")
+                except Exception as e:
+                    pass
+
+    # 2. Fallback to default snippet for this speaker
     snippet_path = None
     query = (
         SpeakerModel.session_id == session_id,

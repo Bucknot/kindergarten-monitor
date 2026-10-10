@@ -3,6 +3,18 @@ from typing import List, Optional, Dict, Any
 from pydantic import BaseModel, Field
 
 
+class SpeakerSampleItem(BaseModel):
+    sample_index: int
+    segment_id: Optional[str] = None
+    start_time: float
+    end_time: float
+    duration: float
+    formatted_time: str
+    text: str
+    is_isolated: bool = False
+    audio_url: str
+
+
 class SpeakerBase(BaseModel):
     diarization_tag: str
     assigned_name: str
@@ -11,6 +23,7 @@ class SpeakerBase(BaseModel):
     total_speech_seconds: float = 0.0
     utterance_count: int = 0
     sample_snippet_url: Optional[str] = None
+    samples: List[SpeakerSampleItem] = Field(default_factory=list)
 
 
 class SpeakerResponse(SpeakerBase):

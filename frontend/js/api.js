@@ -56,6 +56,18 @@ const API = {
         return await res.json();
     },
 
+    async getSpeakerSamples(sessionId, speakerId) {
+        const res = await fetch(`/api/speakers/${sessionId}/${speakerId}/samples`);
+        if (!res.ok) throw new Error('Failed to fetch speaker samples');
+        return await res.json();
+    },
+
+    async getAllSpeakerSamples(sessionId) {
+        const res = await fetch(`/api/speakers/${sessionId}/samples`);
+        if (!res.ok) throw new Error('Failed to fetch all speaker samples');
+        return await res.json();
+    },
+
     async getTranscriptSegments(sessionId, params = {}) {
         const url = new URL(`/api/transcripts/${sessionId}`, window.location.origin);
         Object.entries(params).forEach(([key, val]) => {
